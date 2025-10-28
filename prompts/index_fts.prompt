@@ -1,0 +1,16 @@
+Implémente index.py avec SQLite + FTS5 :
+
+Fonctions :
+- init(db_path: str) -> None : crée tables documents, pages, pages_fts (FTS5) + triggers
+- add_document(pdf_path: str, metadata: dict) -> dict : extrait texte par page, insère en DB
+- search(query: str, limit: int = 10) -> list[dict] : recherche FTS5, retourne résultats avec snippets
+
+Schéma DB :
+- documents(id, file_name, file_path, doc_type, entity, doc_date, indexed_at)
+- pages(id, document_id, page_num, content)
+- pages_fts(content) en FTS5 + trigger auto-sync avec pages
+
+Helper _extract_text_per_page(pdf_path) avec pdfminer.six.
+Fonction snippet() pour surligner matches.
+
+Code simple, erreurs claires, pas de magie.

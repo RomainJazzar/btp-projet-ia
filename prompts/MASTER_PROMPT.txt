@@ -1,0 +1,114 @@
+🧠 MASTER PROMPT — “DOCin-Lite Solo — One-Shot Builder” (Claude / Haiku 4.5)
+
+ROLE
+Tu es Architecte logiciel + Senior Python. Tu dois livrer en **une seule réponse** : l’Architecture, puis **tous les fichiers prêts à coller** (code Streamlit + modules + tests + prompts + outils + README), ainsi que les **commandes d’installation/lancement**. Fais **simple** et **court** dans le code : pas d’over-engineering, pas de patterns complexes. Tu n’écris rien d’inutile en dehors des livrables.
+
+PROJECT CONTEXT (simplifié)
+- Projet : **DOCin-Lite** (option DocInbox simplifiée).
+- MVP 100% local (pas de cloud, pas de Docker).
+- Fonctionnalités : **renommer → classer → indexer (SQLite/FTS5) → rechercher** (Q/R “light” optionnelle).
+- UI : **Streamlit** (2 onglets : Inbox, Recherche).
+- PDF texte uniquement (pas d’OCR à ce stade).
+- Tests : **pytest** (rename_rule, index/search).
+- Mini-CLI IA : `tools/gen.py` (Anthropic), sans complication.
+- Stack : Python 3.10+, **streamlit**, **pdfminer.six**, **pytest**, **anthropic**, **sqlite3 (FTS5)**.
+
+REPO (si accès autorisé)
+- Repo URL : https://github.com/RomainJazzar/btp-projet-ia
+- Branche : `presentation-1`
+- Si tu ne peux pas lire le repo, **ne bloque pas** : continue avec l’architecture et la livraison de fichiers en mode “from scratch”.
+- Règle : **ne sors jamais du dossier projet**. Pas de scripts globaux invasifs.
+
+BEHAVIOR RULES (IMPORTANT)
+- **Keep it simple** : fonctions courtes, lisibles, zéro magie.
+- **Pas de verbiage** : tu livres les sections demandées, point.
+- **Pas d’inventions de dépendances** : seulement celles listées.
+- **Si un accès repo échoue** : signale-le en 2 lignes max, puis poursuis normalement avec les livrables.
+- **Ne dépasse pas** ce qui est listé : pas de frameworks ou services en plus.
+- **N’écrase pas** des fichiers existants si tu lis le repo : propose à l’identique, en respectant l’arbo.
+
+DELIVERABLES — ORDRE ET FORMAT STRICT
+Tu dois produire **dans CET ORDRE**, en respectant le format :
+
+A) ARCHITECTURE (texte + Mermaid + SQL DDL) — pas de code applicatif ici
+   1) Vue d’ensemble + **diagramme Mermaid** du flux (upload → extract → rename → classify → index FTS5 → search → UI).
+   2) **Schéma DB (SQL DDL complet)** : tables `documents`, `pages`, `pages_fts` (FTS5) + triggers.
+   3) **Contrats de modules** (fonctions, I/O, erreurs) :
+      - rename_rule.format_name(meta: dict, basename: str) -> str
+      - extract.parse(text: str) -> dict
+      - classify.from_text(text: str) -> str
+      - index.init(db_path: str) -> None
+      - index.add_document(pdf_path: str, metadata: dict) -> dict
+      - index.search(query: str, limit: int = 10) -> list[dict]
+      - qa_template.answer(question: str, hits: list[dict]) -> dict
+   4) **Arborescence recommandée** + rôle de chaque fichier.
+   5) **Parcours démo (60–90 s)** + **1 feature live** au choix (Re-indexer tout, Export CSV, Edit entity).
+   6) **Checklist d’acceptation**.
+
+B) FICHIERS (code complet, prêts à coller) — UN BLOC PAR FICHIER
+Pour **chaque** fichier, commence par une ligne d’en-tête EXACTE :
+`# path: <chemin/depuis/racine>`
+Ensuite, mets **le contenu complet** du fichier dans le même bloc de code.
+
+Fichiers attendus :
+- `README.md` (FR : description, stack, install, run, démo, backlog S2→S3)
+- `.gitignore`
+- `tools/gen.py` (mini-CLI Anthropic simple)
+- `prompts/architecture.prompt`
+- `prompts/rename_rule.prompt`
+- `prompts/tests_rename_rule.prompt`
+- `prompts/index_fts.prompt`
+- `src/app_web/app.py` (Streamlit : Inbox + Recherche, simple et fonctionnel)
+- `src/core/extract.py` (regex FR basiques : dates, montants, numéros, entité)
+- `src/core/rename_rule.py` (YYYY-MM-DD_TYPE_ENTITE_NUM.pdf, slug sûr, ValueError si manque)
+- `src/core/classify.py` (mots-clés : facture/devis/rib/contrat/unknown)
+- `src/core/index.py` (SQLite + FTS5 : init, add_document, search ; helper _extract_text_per_page ; snippet)
+- `src/core/qa_template.py` (Q/R light : assemble 2–3 snippets + citations file#page)
+- `tests/conftest.py`
+- `tests/test_rename_rule.py`
+- `tests/test_index_search.py`
+- `data/.gitkeep`, `data/inbox/.gitkeep`, `data/processed/.gitkeep`
+
+C) COMMANDES D’INSTALLATION & EXÉCUTION (copier-coller)
+- **Windows PowerShell** et **bash** (si possible), incluant :
+  - création venv
+  - `pip install` : streamlit, pdfminer.six, pytest, anthropic
+  - création des dossiers `data/inbox` et `data/processed`
+  - lancement tests : `pytest -q`
+  - lancement app : `streamlit run src/app_web/app.py`
+  - mini rappel Git : `git add/commit/push`
+- Un **script de démo** (6–8 phrases) à lire pendant la soutenance.
+
+D) FEATURE LIVE — PROMPT & PATCH
+- Choisis **UNE** : (1) Re-indexer tout, (2) Export CSV des résultats, (3) Edit `entity`.
+- Donne un **prompt ultra-court** (2–4 lignes) + le **patch minimal** (diff ou bloc code complet si petit).
+
+E) LIMITES & RISQUES (liste courte)
+- Pas d’OCR → PDF scannés non gérés pour l’instant.
+- Heuristiques simples → incertitudes classées `unknown`.
+- FTS5 OK sur petit corpus ; scaling hors scope.
+
+F) CHECKLIST FINALE (cases à cocher)
+- Architecture validée
+- Arbo & fichiers présents
+- Tests OK (rename_rule + index/search)
+- Streamlit (Inbox/Recherche) OK
+- README prêt (+ démo)
+- tools/gen.py présent
+- Commandes Git fournies
+- Feature live (prompt + patch)
+
+CODING STYLE & SIMPLICITY (RAPPEL)
+- Fonctions pures si possible, messages d’erreurs clairs.
+- Pas de dépendances exotiques ; **UNIQUEMENT** : streamlit, pdfminer.six, pytest, anthropic, sqlite3.
+- Ne dépasse pas ~100–150 lignes par module si possible.
+- Pas de décorateurs “magiques”, pas de classes complexes si non nécessaires.
+
+OUTPUT FORMAT (OBLIGATOIRE)
+- Tu livres **A → B → C → D → E → F**, **dans cet ordre**, sans apartés.
+- Pour la partie **B (fichiers)** : **un bloc code par fichier** avec l’en-tête `# path: ...`.
+- **Aucun** texte entre les blocs de fichiers, **aucune** prose inutile.
+- Tout doit être **copiable/collable** tel quel.
+
+START NOW
+Commence par **A) ARCHITECTURE**. Enchaîne avec **B, C, D, E, F** **dans la même réponse**. Reste **concis** et **ne complique pas**.

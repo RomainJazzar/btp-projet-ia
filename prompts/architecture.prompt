@@ -1,0 +1,8 @@
+Tu es architecte logiciel. Génère l'architecture complète pour DOCin-Lite :
+- Flux : upload PDF → extract métadonnées → rename → classify → index FTS5 → search → UI Streamlit
+- DB SQLite : tables documents, pages, pages_fts (FTS5) + triggers
+- Modules core : extract, rename_rule, classify, index, qa_template
+- Contrats API clairs (fonctions, I/O, erreurs)
+- Diagramme Mermaid du flux complet
+
+Reste simple, pas d'over-engineering. Stack : Python 3.10+, Streamlit, pdfminer.six, SQLite FTS5.

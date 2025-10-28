@@ -1,0 +1,108 @@
+=================================================================
+  DOCin-Lite — INSTALLATION & LANCEMENT RAPIDE
+=================================================================
+
+ÉTAPE 1 : Créer la structure
+-----------------------------
+Ouvrir cmd ou PowerShell dans le dossier du projet, puis :
+
+    setup.bat
+
+ÉTAPE 2 : Créer tous les fichiers source
+-----------------------------------------
+
+    python create_files.py
+
+ÉTAPE 3 : Installer les dépendances
+------------------------------------
+
+    python -m venv venv
+    venv\Scripts\activate
+    pip install streamlit pdfminer.six pytest anthropic
+
+ÉTAPE 4 : Vérifier avec les tests
+----------------------------------
+
+    pytest -q
+
+ÉTAPE 5 : Lancer l'application
+-------------------------------
+
+    streamlit run src\app_web\app.py
+
+→ Navigateur s'ouvre sur http://localhost:8501
+
+=================================================================
+  UTILISATION
+=================================================================
+
+ONGLET INBOX :
+  1. Uploader un PDF ou placer dans data/inbox/
+  2. Vérifier métadonnées détectées (date, type, entité, numéro)
+  3. Cliquer "Renommer & Indexer"
+  4. PDF renommé : YYYY-MM-DD_TYPE_ENTITE_NUM.pdf
+  5. Contenu indexé en base SQLite FTS5
+
+ONGLET RECHERCHE :
+  1. Saisir requête (ex: "facture mars 2024")
+  2. Résultats avec snippets surlignés
+  3. Option : générer réponse synthétique avec citations
+
+=================================================================
+  DÉMO SOUTENANCE (60-90s)
+=================================================================
+
+Script :
+
+"Voici DOCin-Lite, un système de gestion documentaire local.
+Je dépose une facture PDF. L'app extrait automatiquement la date,
+le type, l'entité et le numéro. Je valide et clique Renommer &
+Indexer. Le fichier est renommé selon notre convention et indexé
+en plein texte avec SQLite FTS5. Dans l'onglet Recherche, je
+retrouve le document avec des mots-clés. Les résultats affichent
+des extraits surlignés. Option bonus : réponse synthétique avec
+citations fichier#page."
+
+=================================================================
+  FEATURE LIVE (au choix)
+=================================================================
+
+Option 1 : Re-indexer tout
+Option 2 : Export CSV
+Option 3 : Éditer entité
+
+→ Voir INSTALL.md pour prompts + patches complets
+
+=================================================================
+  DOCUMENTATION
+=================================================================
+
+- README.md        : Présentation, install rapide, backlog
+- INSTALL.md       : Guide complet avec features live
+- ARCHITECTURE.md  : Architecture technique détaillée
+- QUICKSTART.txt   : Ce fichier (installation express)
+
+=================================================================
+  SUPPORT
+=================================================================
+
+Problèmes courants :
+
+1. "Python not found"
+   → Installer Python 3.10+ depuis python.org
+
+2. "pip install échoue"
+   → Mettre à jour pip : python -m pip install --upgrade pip
+
+3. "pytest : commande introuvable"
+   → Vérifier venv activé : venv\Scripts\activate
+
+4. "Streamlit ne démarre pas"
+   → Vérifier installation : pip show streamlit
+
+5. "Erreur extraction PDF"
+   → Vérifier PDF non corrompu/scanné (pas d'OCR dans MVP)
+
+=================================================================
+
+✨ DOCin-Lite est prêt ! Bon développement ! ✨

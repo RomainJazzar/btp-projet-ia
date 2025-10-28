@@ -1,0 +1,10 @@
+Écris la fonction rename_rule.format_name(meta: dict, basename: str) -> str
+
+Règles :
+- Format : YYYY-MM-DD_TYPE_ENTITE_NUM.pdf
+- meta = {"date": "2024-03-15", "doc_type": "FACTURE", "entity": "Entreprise X", "doc_number": "001"}
+- Slug sûr : majuscules, underscores, pas d'accents/espaces/caractères spéciaux
+- ValueError si date ou doc_type manquant
+- Exemple : 2024-03-15_FACTURE_ENTREPRISEX_001.pdf
+
+Code Python simple et lisible, sans dépendances exotiques.

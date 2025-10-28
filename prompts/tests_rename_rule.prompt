@@ -1,0 +1,10 @@
+Écris les tests pytest pour rename_rule.format_name().
+
+Cas à tester :
+- Métadonnées complètes → nom formaté correct
+- Date manquante → ValueError
+- Type doc manquant → ValueError
+- Entité/numéro optionnels → gérés proprement
+- Accents/espaces dans entité → slug propre (majuscules, underscores)
+
+Tests simples, lisibles, avec pytest.raises pour les erreurs.
